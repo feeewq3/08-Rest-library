@@ -11,24 +11,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
-@Configuration
-@EnableWebSecurity
-public class LibraryRestApplication extends WebSecurityConfigurerAdapter{
-
+public class LibraryRestApplication{
 	public static void main(String[] args) {
 		SpringApplication.run(LibraryRestApplication.class, args);
 	}
-
-	@Bean
-	public PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
-	}
 	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.httpBasic().and().csrf().disable()
-			.authorizeRequests()
-				.antMatchers("/**").permitAll();
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }

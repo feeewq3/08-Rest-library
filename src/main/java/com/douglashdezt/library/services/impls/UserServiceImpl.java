@@ -9,9 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.douglashdezt.library.models.dtos.UserInfo;
+import com.douglashdezt.library.models.entities.Token;
 import com.douglashdezt.library.models.entities.User;
+import com.douglashdezt.library.repositories.TokenRepository;
 import com.douglashdezt.library.repositories.UserRepository;
 import com.douglashdezt.library.services.UserService;
+import com.douglashdezt.library.utils.TokenManager;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +24,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired 
+	private TokenRepository tokenRepository;
+	
+	@Autowired
+	private TokenManager tokenManager;
 
 	@Override
 	@Transactional(rollbackOn = Exception.class)
@@ -72,5 +81,41 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean comparePassword(User user, String passToCompare) throws Exception {
 		return passEncoder.matches(passToCompare, user.getPassword());
+	}
+
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public void insertToken(User user, String token) throws Exception {
+		cleanTokens(user);
+		
+		Token newToken = new Token(token, user);
+		tokenRepository.save(newToken);
+	}
+
+	@Override
+	@Transactional(rollbackOn = Exception.class)
+	public Boolean isTokenValid(User user, String token) throws Exception {
+		cleanTokens(user);
+		
+		List<Token> tokens = tokenRepository.findByUserAndActive(user, true);
+				
+		return tokens.stream()
+		.filter((userToken) -> {
+			return userToken.getContent().equals(token) && userToken.getActive();
+		})
+		.findAny()
+		.orElse(null) != null;
+	}
+	
+	@Transactional(rollbackOn = Exception.class)
+	private void cleanTokens(User user) {
+		List<Token> tokens = tokenRepository.findByUserAndActive(user, true);
+		
+		tokens.forEach((userToken) -> {
+			if(!tokenManager.validateJwtToken(userToken.getContent(), user.getUsername())) {
+				userToken.setActive(false);
+				tokenRepository.save(userToken);
+			}
+		});
 	}
 }
