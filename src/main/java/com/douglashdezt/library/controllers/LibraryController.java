@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.douglashdezt.library.models.entities.Book;
-import com.douglashdezt.library.services.BookService;
+import com.douglashdezt.library.models.entities.Movie;
+import com.douglashdezt.library.services.MovieService;
 
 @RestController
 @RequestMapping("library/")
 public class LibraryController {
 	
 	@Autowired
-	private BookService bookService;
+	private MovieService movieService;
 	
-	@GetMapping("/books")
-	public ResponseEntity<List<Book>> findAllBooks() {
+	@GetMapping("/movies")
+	public ResponseEntity<List<Movie>> findAllMovies() {
 		
 		try {
-			List<Book> books = bookService.findAll();
+			List<Movie> books = movieService.findAll();
 			return new ResponseEntity<>(
 					books,
 					HttpStatus.OK);
@@ -38,11 +38,11 @@ public class LibraryController {
 	}
 	
 	
-	@GetMapping("/book/{isbn}")
-	public ResponseEntity<Book> getBookByIsbn(@PathVariable("isbn") String isbn) {
+	@GetMapping("/book/{code}")
+	public ResponseEntity<Movie> getBookByIsbn(@PathVariable("code") String code) {
 		
 		try {
-			Book foundBook = bookService.findOneByIsbn(isbn);
+			Movie foundBook = movieService.findOneByCode(code);
 			
 			if (foundBook == null) {
 				return new ResponseEntity<>(

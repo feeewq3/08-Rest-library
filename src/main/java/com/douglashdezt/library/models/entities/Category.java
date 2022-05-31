@@ -15,19 +15,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Category {
 
 	@Id
-	@Column(name = "id")
-	private String id;
+	@Column(name = "code")
+	private String code;
 	
 	@Column(name  = "name")
 	private String name;
 	
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
 	@JsonIgnore
-	private List<Book> books;
+	private List<Movie> movies;
 
-	public Category(String id, String name) {
+	public Category(String code, String name) {
 		super();
-		this.id = id;
+		this.code = code;
 		this.name = name;
 	}
 
@@ -35,12 +35,12 @@ public class Category {
 		super();
 	}
 
-	public String getId() {
-		return id;
+	public String getCode() {
+		return code;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {
@@ -51,11 +51,11 @@ public class Category {
 		this.name = name;
 	}
 
-	public List<Book> getBooks() {
-		return books;
+	public List<Movie> getMovies() {
+		return movies;
 	}
 
-	public void setBooks(List<Book> books) {
-		this.books = books;
+	public void setMovies(List<Movie> movies) {
+		this.movies = movies;
 	}
 }

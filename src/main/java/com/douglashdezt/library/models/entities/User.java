@@ -19,31 +19,28 @@ public class User {
 	@SequenceGenerator(name = "user_id_gen", sequenceName = "user_id_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_gen")
 	//TODO: Settear el tamaño de salto a 1
-	private Long code;
+	private Long id;
 	
 	@Column(name = "username")
 	private String username;
 	
 	@Column(name = "email")
 	private String email;
-	
-	@Column(name = "name")
-	private String name;
+
 	
 	@Column(name = "password")
 	private String password;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
-	private List<BookLoan> bookLoans;
+	@OneToMany(mappedBy = "userbooking", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
+	private List<Booking> bookings;
 	
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "tokenuser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Token> tokens;
 
-	public User(String username, String email, String name, String password) {
+	public User(String username, String email, String password) {
 		super();
 		this.username = username;
 		this.email = email;
-		this.name = name;
 		this.password = password;
 	}
 
@@ -51,12 +48,12 @@ public class User {
 		super();
 	}
 
-	public Long getCode() {
-		return code;
+	public Long getId() {
+		return id;
 	}
 
-	public void setCode(Long code) {
-		this.code = code;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getUsername() {
@@ -75,13 +72,6 @@ public class User {
 		this.email = email;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getPassword() {
 		return password;
@@ -91,12 +81,12 @@ public class User {
 		this.password = password;
 	}
 
-	public List<BookLoan> getBookLoans() {
-		return bookLoans;
+	public List<Booking> getBookings() {
+		return bookings;
 	}
 
-	public void setBookLoans(List<BookLoan> bookLoans) {
-		this.bookLoans = bookLoans;
+	public void setBookLoans(List<Booking> bookings) {
+		this.bookings = bookings;
 	}
 
 	public List<Token> getTokens() {
